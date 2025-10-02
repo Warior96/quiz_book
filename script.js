@@ -115,6 +115,24 @@ const domandeNonLettoLibro = [
 // VARIABILI GLOBALI
 let swiper;
 let domande = [];
+let buttonSubmitted = {}; // Traccia quali bottoni sono stati inviati
+
+// FUNZIONE: SHUFFLE ARRAY (Fisher-Yates)
+function shuffleArray(array) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+}
+
+// FUNZIONE: VIBRAZIONE MOBILE
+function vibrateDevice() {
+    if ('vibrate' in navigator) {
+        navigator.vibrate(50); // 50ms di vibrazione
+    }
+}
 
 // FUNZIONE: INIZIALIZZAZIONE
 function init() {
@@ -151,6 +169,9 @@ function generaSchermataWelcome() {
 
     wrapper.innerHTML = slideHTML;
 
+    // Aggiungi click su opzioni
+    aggiungiClickOpzioni();
+
     // Event listener per il form
     document.getElementById('welcomeForm').addEventListener('submit', function (e) {
         e.preventDefault();
@@ -177,13 +198,16 @@ function generaSchermataWelcome() {
     });
 }
 
-// FUNZIONE: GENERA SLIDES DOMANDE
+// FUNZIONE: GENERA SLIDES DOMANDE (CON SHUFFLE)
 function generaDomandeSlides() {
     const wrapper = document.getElementById('swiperWrapper');
 
     domande.forEach((domanda, index) => {
-        const opzioniHTML = domanda.opzioni.map(opzione => `
-            <div class="option">
+        // Shuffle delle opzioni
+        const opzioniShuffled = shuffleArray(domanda.opzioni);
+        
+        const opzioniHTML = opzioniShuffled.map(opzione => `
+            <div class="option" data-value="${opzione.id}">
                 <input type="radio" name="q${domanda.id}" id="q${domanda.id}-${opzione.id}" value="${opzione.id}">
                 <label for="q${domanda.id}-${opzione.id}">${opzione.testo}</label>
             </div>
@@ -224,9 +248,27 @@ function generaDomandeSlides() {
     aggiungiEventListeners();
 }
 
+// FUNZIONE: AGGIUNGI CLICK SULLE OPZIONI
+function aggiungiClickOpzioni() {
+    document.addEventListener('click', function(e) {
+        const option = e.target.closest('.option');
+        if (option) {
+            const radio = option.querySelector('input[type="radio"]');
+            if (radio && !radio.disabled) {
+                radio.checked = true;
+                vibrateDevice();
+                
+                // Trigger change event per abilitare il bottone
+                radio.dispatchEvent(new Event('change'));
+            }
+        }
+    });
+}
+
 // FUNZIONE: AGGIUNGI EVENT LISTENERS
 function aggiungiEventListeners() {
     const nextBtn = document.querySelector('.swiper-button-next');
+    const prevBtn = document.querySelector('.swiper-button-prev');
 
     domande.forEach(domanda => {
         const radioInputs = document.querySelectorAll(`input[name="q${domanda.id}"]`);
@@ -235,23 +277,49 @@ function aggiungiEventListeners() {
         // Abilita bottone quando radio selezionato
         radioInputs.forEach(input => {
             input.addEventListener('change', () => {
+                // Se il bottone era già stato inviato, cambia in "Modifica risposta"
+                if (buttonSubmitted[`q${domanda.id}`]) {
+                    submitBtn.textContent = 'Modifica risposta';
+                    submitBtn.classList.remove('submitted');
+                    submitBtn.classList.add('modifica');
+                    buttonSubmitted[`q${domanda.id}`] = false;
+                    nextBtn.classList.add('d-none');
+                }
                 submitBtn.disabled = false;
+                vibrateDevice();
             });
         });
 
-        // Click bottone
+        // Click bottone con prevenzione double-submit
         submitBtn.addEventListener('click', () => {
+            if (buttonSubmitted[`q${domanda.id}`]) {
+                return; // Previene doppio submit
+            }
+
             const selected = document.querySelector(`input[name="q${domanda.id}"]:checked`);
             if (selected) {
                 userData.risposte[`domanda${domanda.id}`] = selected.value;
 
+                // Marca come inviato
+                buttonSubmitted[`q${domanda.id}`] = true;
+                submitBtn.classList.remove('modifica');
+                submitBtn.classList.add('submitted');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Inviato';
+
+                // Disabilita le opzioni
+                radioInputs.forEach(input => input.disabled = true);
+
                 // Mostra bottone next
                 nextBtn.classList.remove('d-none');
+                vibrateDevice();
 
                 // Se è l'ultima domanda, calcola esito
                 if (domanda.id === domande.length) {
-                    calcolaEsito();
-                    salvaRisposte();
+                    setTimeout(() => {
+                        calcolaEsito();
+                        salvaRisposte();
+                    }, 300);
                 }
             }
         });
@@ -260,6 +328,45 @@ function aggiungiEventListeners() {
     // Nascondi bottone next quando si cambia slide
     nextBtn.addEventListener('click', () => {
         nextBtn.classList.add('d-none');
+    });
+
+    // Gestione tasto INDIETRO - Ripristina stato modificabile
+    prevBtn.addEventListener('click', () => {
+        nextBtn.classList.add('d-none');
+        
+        // Trova l'indice della slide corrente dopo il click
+        setTimeout(() => {
+            const currentIndex = swiper.activeIndex;
+            
+            // Se siamo su una slide di domanda (non welcome né esito)
+            if (currentIndex > 0 && currentIndex <= domande.length) {
+                const domandaCorrente = domande[currentIndex - 1];
+                const radioInputs = document.querySelectorAll(`input[name="q${domandaCorrente.id}"]`);
+                const submitBtn = document.getElementById(`btn-q${domandaCorrente.id}`);
+                
+                // Riabilita i radio per permettere modifica
+                radioInputs.forEach(input => input.disabled = false);
+                
+                // Se la domanda era già stata risposta
+                if (buttonSubmitted[`q${domandaCorrente.id}`]) {
+                    submitBtn.textContent = 'Modifica risposta';
+                    submitBtn.classList.remove('submitted');
+                    submitBtn.classList.add('modifica');
+                    submitBtn.disabled = false;
+                    
+                    // Ricontrolla il radio precedentemente selezionato
+                    const valoreSelezionato = userData.risposte[`domanda${domandaCorrente.id}`];
+                    if (valoreSelezionato) {
+                        const radioCorrente = document.querySelector(
+                            `input[name="q${domandaCorrente.id}"][value="${valoreSelezionato}"]`
+                        );
+                        if (radioCorrente) {
+                            radioCorrente.checked = true;
+                        }
+                    }
+                }
+            }
+        }, 50); // Piccolo delay per permettere a swiper di cambiare slide
     });
 }
 
@@ -301,21 +408,22 @@ function calcolaEsito() {
         userData.esito = fraseEsito;
 
     } else {
-        // Logica per chi NON ha letto
+        // Logica per chi NON ha letto (BUG FIXATO)
         const m = risposte.filter(el => el === 'M').length;
         const c = risposte.filter(el => el === 'C').length;
         const z = risposte.filter(el => el === 'Z').length;
 
-        if (Math.max(m, c, z) === z || c === m) {
+        // Risolve ambiguità con priorità Z > C > M
+        if (z >= c && z >= m) {
             userData.esito = "Sei Mezzo";
-        } else if (Math.max(m, c, z) === c) {
+        } else if (c > z && c >= m) {
             userData.esito = "Sei Carmen";
-        } else if (Math.max(m, c, z) === m) {
+        } else {
             userData.esito = "Sei Monica";
         }
     }
 
-    // Mostra esito
+    // Mostra esito con animazione
     document.getElementById('esito').innerHTML = userData.esito;
 }
 

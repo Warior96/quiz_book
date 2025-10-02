@@ -10,6 +10,7 @@ body {
     background-color: #000;
     color: #fff;
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
 }
 
 h1,
@@ -21,10 +22,11 @@ h6 {
     font-family: "Arial Black", Impact, sans-serif;
 }
 
-/* Swiper */
+/* Swiper - Mobile First */
 .swiper {
     width: 100%;
     height: 100vh;
+    height: 100dvh; /* Dynamic viewport height per mobile */
 }
 
 .swiper-slide {
@@ -32,6 +34,7 @@ h6 {
     justify-content: center;
     align-items: center;
     background: #000;
+    padding: 15px;
 }
 
 .swiper-button-next,
@@ -39,19 +42,29 @@ h6 {
     color: #fff;
 }
 
+/* Animazione freccia potenziata */
 .swiper-button-next {
-    animation: bounce 1s infinite;
+    animation: bounce-pulse 1s ease-in-out infinite;
+    background: #dc3545;
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(220, 53, 69, 0.6);
 }
 
-@keyframes bounce {
+.swiper-button-next::after {
+    font-size: 20px !important;
+    font-weight: bold;
+}
 
-    0%,
-    100% {
-        transform: translateX(0);
+@keyframes bounce-pulse {
+    0%, 100% {
+        transform: translateX(0) scale(1);
+        box-shadow: 0 0 20px rgba(220, 53, 69, 0.6);
     }
-
     50% {
-        transform: translateX(10px);
+        transform: translateX(8px) scale(1.1);
+        box-shadow: 0 0 30px rgba(220, 53, 69, 1);
     }
 }
 
@@ -59,68 +72,88 @@ h6 {
     background: #dc3545 !important;
 }
 
-/* Container e layout */
+/* Container e layout - Mobile First */
 .container {
-    max-width: 1200px;
     width: 100%;
-    padding: 20px;
+    max-width: 100%;
+    padding: 15px;
 }
 
 .question-container {
     text-align: center;
-    max-width: 600px;
+    width: 100%;
+    max-width: 500px;
     margin: 0 auto;
 }
 
-/* Titoli e testo */
+/* Titoli e testo - Mobile First */
 h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
     text-align: center;
+    line-height: 1.3;
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: 1.4rem;
     margin-bottom: 1rem;
     color: #fff;
 }
 
 p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
 }
 
-/* Input username */
+/* Input username - Mobile First */
 #username {
-    width: min(300px, 80vw);
-    padding: 12px;
+    width: 100%;
+    max-width: 300px;
+    padding: 14px;
     font-size: 1rem;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 2px solid #fff;
     background: #1a1a1a;
     color: #fff;
     margin: 20px auto;
     display: block;
     text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 #username::placeholder {
     color: #999;
 }
 
-/* Opzioni radio */
+#username:focus {
+    outline: none;
+    border-color: #dc3545;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+/* Opzioni radio - Mobile First con click su tutta l'area */
 .option {
     background: #1a1a1a;
-    padding: 15px 20px;
-    margin: 10px auto;
-    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 12px 0;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s ease;
     border: 2px solid transparent;
     display: flex;
     align-items: center;
     text-align: left;
-    max-width: 500px;
+    width: 100%;
+    position: relative;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.option:active {
+    transform: scale(0.98);
 }
 
 .option:hover {
@@ -128,38 +161,55 @@ p {
     border-color: #fff;
 }
 
+/* Radio selezionato */
+.option:has(input[type="radio"]:checked) {
+    background: #2a2a2a;
+    border-color: #dc3545;
+    box-shadow: 0 0 15px rgba(220, 53, 69, 0.3);
+}
+
 .option input[type="radio"] {
-    margin-right: 15px;
+    margin-right: 12px;
     cursor: pointer;
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+    accent-color: #dc3545;
+    pointer-events: none; /* Il click è gestito dal label */
 }
 
 .option label {
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.95rem;
     user-select: none;
     flex: 1;
+    line-height: 1.4;
+    pointer-events: none; /* Il click è gestito dall'option */
 }
 
-/* Bottoni */
+/* Bottoni - Mobile First */
 button {
     background: #dc3545;
     color: #fff;
     border: none;
-    padding: 12px 30px;
+    padding: 14px 30px;
     font-size: 1rem;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     margin-top: 20px;
-    transition: all 0.3s;
+    transition: all 0.2s ease;
     font-weight: bold;
+    width: 100%;
+    max-width: 300px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:active:not(:disabled) {
+    transform: scale(0.97);
 }
 
 button:hover:not(:disabled) {
     background: #c82333;
-    transform: scale(1.05);
 }
 
 button:disabled {
@@ -168,23 +218,49 @@ button:disabled {
     opacity: 0.5;
 }
 
+button.submitted {
+    background: #28a745;
+    cursor: default;
+}
+
+button.submitted::after {
+    content: " ✓";
+}
+
+/* Stile bottone "Modifica risposta" */
+button.modifica {
+    background: #ffc107;
+    color: #000;
+}
+
+button.modifica:hover:not(:disabled) {
+    background: #e0a800;
+}
+
+button.modifica::after {
+    content: " ✏️";
+}
+
 /* Link iniziale */
 .start-link {
     display: inline-block;
     background: #dc3545;
     color: #fff;
     text-decoration: none;
-    padding: 15px 40px;
-    border-radius: 8px;
-    margin-top: 30px;
-    font-size: 1.1rem;
-    transition: all 0.3s;
+    padding: 14px 35px;
+    border-radius: 10px;
+    margin-top: 25px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
     font-weight: bold;
+}
+
+.start-link:active {
+    transform: scale(0.97);
 }
 
 .start-link:hover {
     background: #c82333;
-    transform: scale(1.05);
 }
 
 .start-link.disabled {
@@ -194,16 +270,27 @@ button:disabled {
     pointer-events: none;
 }
 
-/* Schermata esito */
+/* Schermata esito con animazione */
 #esito {
-    font-size: 2rem;
+    font-size: 1.5rem;
     text-align: center;
-    padding: 40px;
+    padding: 30px 20px;
     background: #1a1a1a;
     border-radius: 15px;
     margin: 20px auto;
-    max-width: 600px;
-    line-height: 1.5;
+    width: 100%;
+    max-width: 500px;
+    line-height: 1.6;
+    opacity: 0;
+    transform: scale(0.9);
+    animation: fadeInScale 0.6s ease forwards;
+}
+
+@keyframes fadeInScale {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Utility classes */
@@ -215,56 +302,122 @@ button:disabled {
     text-align: center;
 }
 
-/* Media queries */
-@media (max-width: 767px) {
+/* Tablet - 768px e superiori */
+@media (min-width: 768px) {
+    .swiper-slide {
+        padding: 30px;
+    }
+
     h1 {
-        font-size: 1.8rem;
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
     }
 
     h2 {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
     }
 
     p {
-        font-size: 1rem;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
     }
 
     .option {
-        padding: 12px 15px;
+        padding: 18px 22px;
+        margin: 14px 0;
     }
 
     .option label {
-        font-size: 0.9rem;
+        font-size: 1rem;
+    }
+
+    button {
+        padding: 14px 35px;
+        font-size: 1.05rem;
+        width: auto;
+        min-width: 200px;
     }
 
     #esito {
-        font-size: 1.5rem;
-        padding: 30px 20px;
+        font-size: 1.8rem;
+        padding: 40px 30px;
+    }
+
+    .container {
+        padding: 30px;
+    }
+}
+
+/* Desktop - 992px e superiori */
+@media (min-width: 992px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1.2rem;
+    }
+
+    .option {
+        padding: 18px 24px;
+    }
+
+    .option:hover {
+        transform: translateX(5px);
+    }
+
+    button:hover:not(:disabled) {
+        transform: scale(1.05);
+    }
+
+    .start-link:hover {
+        transform: scale(1.05);
+    }
+
+    #esito {
+        font-size: 2rem;
+        padding: 45px 40px;
+    }
+
+    .container {
+        padding: 40px;
+    }
+}
+
+/* Landscape mobile - fix per altezza ridotta */
+@media (max-height: 600px) and (orientation: landscape) {
+    h1 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .option {
+        padding: 10px 15px;
+        margin: 8px 0;
     }
 
     button {
         padding: 10px 25px;
-        font-size: 0.9rem;
+        margin-top: 15px;
     }
 
-    .start-link {
-        padding: 12px 30px;
-        font-size: 1rem;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-    h1 {
-        font-size: 2.2rem;
-    }
-
-    h2 {
-        font-size: 1.8rem;
-    }
-}
-
-@media (min-width: 992px) {
-    .container {
-        padding: 40px;
+    #esito {
+        font-size: 1.2rem;
+        padding: 20px 15px;
     }
 }
