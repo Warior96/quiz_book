@@ -1,0 +1,270 @@
+/* Reset e impostazioni base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+    overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Arial Black", Impact, sans-serif;
+}
+
+/* Swiper */
+.swiper {
+    width: 100%;
+    height: 100vh;
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #fff;
+}
+
+.swiper-button-next {
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(10px);
+    }
+}
+
+.swiper-pagination-progressbar-fill {
+    background: #dc3545 !important;
+}
+
+/* Container e layout */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+}
+
+.question-container {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Titoli e testo */
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Input username */
+#username {
+    width: min(300px, 80vw);
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    background: #1a1a1a;
+    color: #fff;
+    margin: 20px auto;
+    display: block;
+    text-align: center;
+}
+
+#username::placeholder {
+    color: #999;
+}
+
+/* Opzioni radio */
+.option {
+    background: #1a1a1a;
+    padding: 15px 20px;
+    margin: 10px auto;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    max-width: 500px;
+}
+
+.option:hover {
+    background: #2a2a2a;
+    border-color: #fff;
+}
+
+.option input[type="radio"] {
+    margin-right: 15px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.option label {
+    cursor: pointer;
+    font-size: 1rem;
+    user-select: none;
+    flex: 1;
+}
+
+/* Bottoni */
+button {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+button:hover:not(:disabled) {
+    background: #c82333;
+    transform: scale(1.05);
+}
+
+button:disabled {
+    background: #555;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Link iniziale */
+.start-link {
+    display: inline-block;
+    background: #dc3545;
+    color: #fff;
+    text-decoration: none;
+    padding: 15px 40px;
+    border-radius: 8px;
+    margin-top: 30px;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.start-link:hover {
+    background: #c82333;
+    transform: scale(1.05);
+}
+
+.start-link.disabled {
+    background: #555;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Schermata esito */
+#esito {
+    font-size: 2rem;
+    text-align: center;
+    padding: 40px;
+    background: #1a1a1a;
+    border-radius: 15px;
+    margin: 20px auto;
+    max-width: 600px;
+    line-height: 1.5;
+}
+
+/* Utility classes */
+.d-none {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Media queries */
+@media (max-width: 767px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .option {
+        padding: 12px 15px;
+    }
+
+    .option label {
+        font-size: 0.9rem;
+    }
+
+    #esito {
+        font-size: 1.5rem;
+        padding: 30px 20px;
+    }
+
+    button {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+
+    .start-link {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        padding: 40px;
+    }
+}
