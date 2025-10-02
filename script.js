@@ -148,10 +148,10 @@ function generaSchermataWelcome() {
         <div class="swiper-slide">
             <div class="container">
                 <div class="question-container">
-                    <h1>Benvenuto nel quiz</h1>
+                    <h3>Benvenuto nel quiz</h3>
                     <form id="welcomeForm">
                         <input type="text" id="username" placeholder="Inserisci il tuo nome" required>
-                        <p style="margin-top: 30px;">Hai letto il libro?</p>
+                        <h1 style="margin-top: 30px;">Hai letto il libro "Il profilo migliore?"</h1>
                         <div class="option">
                             <input type="radio" name="letto" id="si" value="si">
                             <label for="si">Sì</label>
@@ -205,7 +205,7 @@ function generaDomandeSlides() {
     domande.forEach((domanda, index) => {
         // Shuffle delle opzioni
         const opzioniShuffled = shuffleArray(domanda.opzioni);
-        
+
         const opzioniHTML = opzioniShuffled.map(opzione => `
             <div class="option" data-value="${opzione.id}">
                 <input type="radio" name="q${domanda.id}" id="q${domanda.id}-${opzione.id}" value="${opzione.id}">
@@ -250,19 +250,56 @@ function generaDomandeSlides() {
 
 // FUNZIONE: AGGIUNGI CLICK SULLE OPZIONI
 function aggiungiClickOpzioni() {
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         const option = e.target.closest('.option');
         if (option) {
             const radio = option.querySelector('input[type="radio"]');
             if (radio && !radio.disabled) {
                 radio.checked = true;
                 vibrateDevice();
-                
+
                 // Trigger change event per abilitare il bottone
                 radio.dispatchEvent(new Event('change'));
             }
         }
     });
+}
+
+// FUNZIONE: RIPRISTINA STATO MODIFICA
+function ripristinaStatoModifica(domanda) {
+    const radioInputs = document.querySelectorAll(`input[name="q${domanda.id}"]`);
+    const submitBtn = document.getElementById(`btn-q${domanda.id}`);
+
+    // Se la domanda era già stata risposta
+    if (buttonSubmitted[`q${domanda.id}`]) {
+        // Mantieni i radio DISABILITATI (bloccati)
+        radioInputs.forEach(input => {
+            input.disabled = true;
+            // Forza il browser a riconoscere lo stato disabled
+            input.parentElement.classList.add('disabled-option');
+        });
+
+        // Mostra bottone giallo "Modifica risposta"
+        submitBtn.textContent = 'Modifica risposta';
+        submitBtn.classList.remove('submitted');
+        submitBtn.classList.add('modifica');
+        submitBtn.disabled = false;
+
+        // Ricontrolla il radio precedentemente selezionato
+        const valoreSelezionato = userData.risposte[`domanda${domanda.id}`];
+        if (valoreSelezionato) {
+            const radioCorrente = document.querySelector(
+                `input[name="q${domanda.id}"][value="${valoreSelezionato}"]`
+            );
+            if (radioCorrente) {
+                radioCorrente.checked = true;
+            }
+        }
+
+        // Mostra la freccia avanti (puoi proseguire senza modificare)
+        const nextBtn = document.querySelector('.swiper-button-next');
+        nextBtn.classList.remove('d-none');
+    }
 }
 
 // FUNZIONE: AGGIUNGI EVENT LISTENERS
@@ -277,50 +314,73 @@ function aggiungiEventListeners() {
         // Abilita bottone quando radio selezionato
         radioInputs.forEach(input => {
             input.addEventListener('change', () => {
-                // Se il bottone era già stato inviato, cambia in "Modifica risposta"
-                if (buttonSubmitted[`q${domanda.id}`]) {
-                    submitBtn.textContent = 'Modifica risposta';
-                    submitBtn.classList.remove('submitted');
-                    submitBtn.classList.add('modifica');
-                    buttonSubmitted[`q${domanda.id}`] = false;
-                    nextBtn.classList.add('d-none');
-                }
+                // Abilita sempre il bottone quando selezioni un radio
                 submitBtn.disabled = false;
+
+                // Se il bottone non è in modalità "Invia", cambialio
+                if (!submitBtn.textContent.includes('Invia') || submitBtn.classList.contains('submitted')) {
+                    submitBtn.textContent = 'Invia';
+                    submitBtn.classList.remove('submitted', 'modifica');
+                }
+
                 vibrateDevice();
             });
         });
 
-        // Click bottone con prevenzione double-submit
+        // Click bottone
         submitBtn.addEventListener('click', () => {
-            if (buttonSubmitted[`q${domanda.id}`]) {
-                return; // Previene doppio submit
+            // CASO 1: Bottone in modalità "Modifica risposta"
+            if (submitBtn.classList.contains('modifica')) {
+                // Riabilita i radio per permettere modifica
+                radioInputs.forEach(input => {
+                    input.disabled = false;
+                    // Rimuovi la classe che indica opzione disabilitata
+                    input.parentElement.classList.remove('disabled-option');
+                });
+
+                // Cambia bottone in "Invia"
+                submitBtn.textContent = 'Invia';
+                submitBtn.classList.remove('modifica');
+                buttonSubmitted[`q${domanda.id}`] = false;
+
+                // Nascondi freccia avanti
+                nextBtn.classList.add('d-none');
+
+                vibrateDevice();
+                return;
             }
 
+            // CASO 2: Bottone in modalità "Invia"
             const selected = document.querySelector(`input[name="q${domanda.id}"]:checked`);
-            if (selected) {
-                userData.risposte[`domanda${domanda.id}`] = selected.value;
+            if (!selected) return;
 
-                // Marca come inviato
-                buttonSubmitted[`q${domanda.id}`] = true;
-                submitBtn.classList.remove('modifica');
-                submitBtn.classList.add('submitted');
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Inviato';
+            // Previeni doppio submit
+            if (buttonSubmitted[`q${domanda.id}`]) {
+                return;
+            }
 
-                // Disabilita le opzioni
-                radioInputs.forEach(input => input.disabled = true);
+            userData.risposte[`domanda${domanda.id}`] = selected.value;
 
-                // Mostra bottone next
-                nextBtn.classList.remove('d-none');
-                vibrateDevice();
+            // Marca come inviato
+            buttonSubmitted[`q${domanda.id}`] = true;
+            submitBtn.classList.remove('modifica');
+            submitBtn.classList.add('submitted');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Inviato';
 
-                // Se è l'ultima domanda, calcola esito
-                if (domanda.id === domande.length) {
-                    setTimeout(() => {
-                        calcolaEsito();
-                        salvaRisposte();
-                    }, 300);
-                }
+            // Disabilita le opzioni
+            radioInputs.forEach(input => input.disabled = true);
+
+            // Mostra bottone next
+            nextBtn.classList.remove('d-none');
+            vibrateDevice();
+
+            // Se è l'ultima domanda, calcola esito
+            if (domanda.id === domande.length) {
+                setTimeout(() => {
+                    calcolaEsito();
+                    salvaRisposte();
+                }, 300);
             }
         });
     });
@@ -330,43 +390,18 @@ function aggiungiEventListeners() {
         nextBtn.classList.add('d-none');
     });
 
-    // Gestione tasto INDIETRO - Ripristina stato modificabile
-    prevBtn.addEventListener('click', () => {
+    // Gestione cambio slide - Ripristina stato della slide corrente
+    swiper.on('slideChange', function () {
+        const currentIndex = swiper.activeIndex;
+
+        // Nascondi sempre la freccia avanti quando cambi slide
         nextBtn.classList.add('d-none');
-        
-        // Trova l'indice della slide corrente dopo il click
-        setTimeout(() => {
-            const currentIndex = swiper.activeIndex;
-            
-            // Se siamo su una slide di domanda (non welcome né esito)
-            if (currentIndex > 0 && currentIndex <= domande.length) {
-                const domandaCorrente = domande[currentIndex - 1];
-                const radioInputs = document.querySelectorAll(`input[name="q${domandaCorrente.id}"]`);
-                const submitBtn = document.getElementById(`btn-q${domandaCorrente.id}`);
-                
-                // Riabilita i radio per permettere modifica
-                radioInputs.forEach(input => input.disabled = false);
-                
-                // Se la domanda era già stata risposta
-                if (buttonSubmitted[`q${domandaCorrente.id}`]) {
-                    submitBtn.textContent = 'Modifica risposta';
-                    submitBtn.classList.remove('submitted');
-                    submitBtn.classList.add('modifica');
-                    submitBtn.disabled = false;
-                    
-                    // Ricontrolla il radio precedentemente selezionato
-                    const valoreSelezionato = userData.risposte[`domanda${domandaCorrente.id}`];
-                    if (valoreSelezionato) {
-                        const radioCorrente = document.querySelector(
-                            `input[name="q${domandaCorrente.id}"][value="${valoreSelezionato}"]`
-                        );
-                        if (radioCorrente) {
-                            radioCorrente.checked = true;
-                        }
-                    }
-                }
-            }
-        }, 50); // Piccolo delay per permettere a swiper di cambiare slide
+
+        // Se siamo su una slide di domanda (non welcome né esito)
+        if (currentIndex > 0 && currentIndex <= domande.length) {
+            const domandaCorrente = domande[currentIndex - 1];
+            ripristinaStatoModifica(domandaCorrente);
+        }
     });
 }
 
@@ -397,29 +432,64 @@ function calcolaEsito() {
         const personaggi = risposteMax.map(r => nomiPersonaggi[r]).filter(Boolean);
 
         let fraseEsito = "";
+        let testoEsito = "";
         if (personaggi.length === 1) {
-            fraseEsito = `Sei sicuramente ${personaggi[0]}!`;
+            switch (personaggi[0]) {
+                case 'Monica':
+                    testoEsito = "Una persona introversa e riflessiva, pronta a difendere a tutti i costi i propri valori e la propria identità. Non ti piace omologarti e trovi nei tuoi pensieri e nelle tue certezze un rifugio sicuro";
+                    break;
+                case 'Carmen':
+                    testoEsito = "Una persona esuberante, fresca e socievole. L'ignoto non ti spaventa. Sei sempre alla ricerca di nuove sfide, nuove avventure, possibilmente lontano da casa e dalla tua comfort zone.";
+                    break;
+                case 'Angelo':
+                    testoEsito = "Sei attento, sensibile e dolce. Non hai paura a mostrarti per ciò che sei, ma a volte sai che i compromessi, nella vita, sono necessari.";
+                    break;
+                case 'Fluffy':
+                    testoEsito = "Inguaribilmente pigra, non badi all'apparenza. Sei una persona schietta e diretta, ma spesso non hai ben chiari i tuoi confini.";
+                    break;
+                default:
+                    testoEsito = "Errore nell'identificazione del personaggio";
+                    break;
+            }
+            fraseEsito = `Sei sicuramente ${personaggi[0]}! <br> ${testoEsito}`;
         } else if (personaggi.length === 2) {
-            fraseEsito = `Sei un mix di ${personaggi[0]} e ${personaggi[1]}!`;
+            if (personaggi.includes('Monica') && personaggi.includes('Carmen')) {
+                testoEsito = "A seconda dei contesti e delle persone che hai attorno, sai essere una persona tanto timida quanto estroversa, tanto cauta quanto ribelle. Decidi quale lato mostrare e a chi.";
+            } else if (personaggi.includes('Monica') && personaggi.includes('Angelo')) {
+                testoEsito = "Passione ma anche tanta paura. Provi emozioni autentiche ma a volte hai paura a viverle fino in fondo. Che aspetti?";
+            } else if (personaggi.includes('Monica') && personaggi.includes('Fluffy')) {
+                testoEsito = "In continua tensione tra chi sei e chi vuoi essere, lotti ogni giorno per emergere e per non cedere a compromessi.";
+            } else if (personaggi.includes('Carmen') && personaggi.includes('Angelo')) {
+                testoEsito = "Una personalità imprevedibile, spesso troppo istintiva, ma a volte sorprendentemente troppo impulsiva. Le vie di mezzo sono rare.";
+            } else if (personaggi.includes('Carmen') && personaggi.includes('Fluffy')) {
+                testoEsito = "Hai scelta anche quando ti sembra di non avere più opzioni a disposizione. Non dimenticarlo mai.";
+            } else if (personaggi.includes('Angelo') && personaggi.includes('Fluffy')) {
+                testoEsito = "Sei disponibile ma riservato, la maggior parte del tempo la passi a cercare di conoscere te stesso e spesso questo ti porta a non vedere cosa succede fuori.";
+            } else {
+                testoEsito = "Errore nell'identificazione del personaggio";
+            }
+            fraseEsito = `Sei un mix di ${personaggi[0]} e ${personaggi[1]}! <br> ${testoEsito}`;
         } else {
-            fraseEsito = `Sei un po' di tutto! Hai caratteristiche di ${personaggi.join(', ')}.`;
+            testoEsito = "Il profilo migliore è il libro che fa per te perché potresti trovare una parte di te stesso in ognuno dei personaggi della storia. Non sei più curioso, ora?";
+            fraseEsito = `Sei un po' di tutto! Hai caratteristiche di ${personaggi.join(', ')}. <br> ${testoEsito}`;
         }
 
         userData.esito = fraseEsito;
 
     } else {
-        // Logica per chi NON ha letto (BUG FIXATO)
+        // Logica per chi NON ha letto
         const m = risposte.filter(el => el === 'M').length;
         const c = risposte.filter(el => el === 'C').length;
         const z = risposte.filter(el => el === 'Z').length;
 
-        // Risolve ambiguità con priorità Z > C > M
         if (z >= c && z >= m) {
-            userData.esito = "Sei Mezzo";
+            userData.esito = "Sei un po' Monica e un po' Carmen. A seconda dei contesti e delle persone che hai attorno, sai essere una persona tanto timida quanto estroversa, tanto cauta quanto ribelle. Decidi quale lato mostrare e a chi.";
         } else if (c > z && c >= m) {
-            userData.esito = "Sei Carmen";
+            userData.esito = "Sei Carmen <br>Una persona esuberante, fresca e socievole. L'ignoto non ti spaventa. Sei sempre alla ricerca di nuove sfide, nuove avventure, possibilmente lontano da casa e dalla tua comfort zone.";
+        } else if (m > z && m >= c) {
+            userData.esito = "Sei Monica <br>Una persona introversa e riflessiva, pronta a difendere a tutti i costi i propri valori e la propria identità. Non ti piace omologarti e trovi nei tuoi pensieri e nelle tue certezze un rifugio sicuro.";
         } else {
-            userData.esito = "Sei Monica";
+            userData.esito = "Errore nel calcolo";
         }
     }
 
@@ -468,6 +538,9 @@ function initSwiper() {
     swiper = new Swiper(".mySwiper", {
         cssMode: true,
         allowTouchMove: false,
+        simulateTouch: false,
+        touchRatio: 0,
+        touchAngle: 0,
         pagination: {
             el: ".swiper-pagination",
             type: "progressbar",
