@@ -1,8 +1,7 @@
-// ===== CONFIGURAZIONE GOOGLE SHEETS =====
-// ⚠️ SOSTITUISCI CON IL TUO URL DI GOOGLE APPS SCRIPT
-const GOOGLE_SCRIPT_URL = 'INSERISCI_QUI_IL_TUO_URL_GOOGLE_SCRIPT';
+// CONFIGURAZIONE GOOGLE SHEETS
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyURZV6kQXjHZsRJ4DPBY1sQ0uBwRgr_TFt_Ur766HCqh1KN-TnZO6or47RuiO3C0Zw/exec';
 
-// ===== DATI UTENTE =====
+// DATI UTENTE
 let userData = {
     nome: '',
     haLetto: '',
@@ -10,7 +9,7 @@ let userData = {
     esito: ''
 };
 
-// ===== DOMANDE PER CHI HA LETTO IL LIBRO =====
+// DOMANDE PER CHI HA LETTO IL LIBRO
 const domandeLettoLibro = [
     {
         id: 1,
@@ -64,7 +63,7 @@ const domandeLettoLibro = [
     }
 ];
 
-// ===== DOMANDE PER CHI NON HA LETTO IL LIBRO =====
+// DOMANDE PER CHI NON HA LETTO IL LIBRO
 const domandeNonLettoLibro = [
     {
         id: 1,
@@ -113,17 +112,17 @@ const domandeNonLettoLibro = [
     }
 ];
 
-// ===== VARIABILI GLOBALI =====
+// VARIABILI GLOBALI
 let swiper;
 let domande = [];
 
-// ===== FUNZIONE: INIZIALIZZAZIONE =====
+// FUNZIONE: INIZIALIZZAZIONE
 function init() {
     generaSchermataWelcome();
     initSwiper();
 }
 
-// ===== FUNZIONE: GENERA SCHERMATA WELCOME =====
+// FUNZIONE: GENERA SCHERMATA WELCOME
 function generaSchermataWelcome() {
     const wrapper = document.getElementById('swiperWrapper');
 
@@ -178,7 +177,7 @@ function generaSchermataWelcome() {
     });
 }
 
-// ===== FUNZIONE: GENERA SLIDES DOMANDE =====
+// FUNZIONE: GENERA SLIDES DOMANDE
 function generaDomandeSlides() {
     const wrapper = document.getElementById('swiperWrapper');
 
@@ -225,7 +224,7 @@ function generaDomandeSlides() {
     aggiungiEventListeners();
 }
 
-// ===== FUNZIONE: AGGIUNGI EVENT LISTENERS =====
+// FUNZIONE: AGGIUNGI EVENT LISTENERS
 function aggiungiEventListeners() {
     const nextBtn = document.querySelector('.swiper-button-next');
 
@@ -264,7 +263,7 @@ function aggiungiEventListeners() {
     });
 }
 
-// ===== FUNZIONE: CALCOLA ESITO =====
+// FUNZIONE: CALCOLA ESITO
 function calcolaEsito() {
     const risposte = Object.values(userData.risposte);
 
@@ -320,7 +319,7 @@ function calcolaEsito() {
     document.getElementById('esito').innerHTML = userData.esito;
 }
 
-// ===== FUNZIONE: SALVA RISPOSTE SU GOOGLE SHEETS =====
+// FUNZIONE: SALVA RISPOSTE SU GOOGLE SHEETS
 async function salvaRisposte() {
     // Se l'URL non è configurato, salta il salvataggio
     if (GOOGLE_SCRIPT_URL === 'INSERISCI_QUI_IL_TUO_URL_GOOGLE_SCRIPT') {
@@ -356,7 +355,7 @@ async function salvaRisposte() {
     }
 }
 
-// ===== FUNZIONE: INIZIALIZZA SWIPER =====
+// FUNZIONE: INIZIALIZZA SWIPER
 function initSwiper() {
     swiper = new Swiper(".mySwiper", {
         cssMode: true,
@@ -372,5 +371,5 @@ function initSwiper() {
     });
 }
 
-// ===== AVVIO APPLICAZIONE =====
+// AVVIO APPLICAZIONE
 document.addEventListener('DOMContentLoaded', init);
