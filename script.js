@@ -67,7 +67,7 @@ const domandeLettoLibro = [
 const domandeNonLettoLibro = [
     {
         id: 1,
-        domanda: "Ti reputi:",
+        domanda: "Ti reputi una persona:",
         opzioni: [
             { id: 'M', testo: "Introversa" },
             { id: 'C', testo: "Estroversa" },
@@ -151,7 +151,7 @@ function generaSchermataWelcome() {
                     <h3>Benvenuto nel quiz</h3>
                     <form id="welcomeForm">
                         <input type="text" id="username" placeholder="Inserisci il tuo nome" required>
-                        <h1 style="margin-top: 30px;">Hai letto il libro "Il profilo migliore?"</h1>
+                        <h1 style="margin-top: 30px;">Hai letto il libro<br>"Il profilo migliore?"</h1>
                         <div class="option">
                             <input type="radio" name="letto" id="si" value="si">
                             <label for="si">Sì</label>
@@ -217,8 +217,8 @@ function generaDomandeSlides() {
             <div class="swiper-slide">
                 <div class="container">
                     <div class="question-container">
-                        <h2>Domanda ${domanda.id}</h2>
-                        <p>${domanda.domanda}</p>
+                        <p>Domanda ${domanda.id}</p>
+                        <h2>${domanda.domanda}</h2>
                         ${opzioniHTML}
                         <button id="btn-q${domanda.id}" disabled>Invia</button>
                     </div>
@@ -451,7 +451,7 @@ function calcolaEsito() {
                     testoEsito = "Errore nell'identificazione del personaggio";
                     break;
             }
-            fraseEsito = `Sei sicuramente ${personaggi[0]}! <br> ${testoEsito}`;
+            fraseEsito = `<strong>Sei sicuramente ${personaggi[0]}!</strong> <br> ${testoEsito}`;
         } else if (personaggi.length === 2) {
             if (personaggi.includes('Monica') && personaggi.includes('Carmen')) {
                 testoEsito = "A seconda dei contesti e delle persone che hai attorno, sai essere una persona tanto timida quanto estroversa, tanto cauta quanto ribelle. Decidi quale lato mostrare e a chi.";
@@ -468,10 +468,10 @@ function calcolaEsito() {
             } else {
                 testoEsito = "Errore nell'identificazione del personaggio";
             }
-            fraseEsito = `Sei un mix di ${personaggi[0]} e ${personaggi[1]}! <br> ${testoEsito}`;
+            fraseEsito = `<strong>Sei un mix tra ${personaggi[0]} e ${personaggi[1]}!</strong> <br> ${testoEsito}`;
         } else {
             testoEsito = "Il profilo migliore è il libro che fa per te perché potresti trovare una parte di te stesso in ognuno dei personaggi della storia. Non sei più curioso, ora?";
-            fraseEsito = `Sei un po' di tutto! Hai caratteristiche di ${personaggi.join(', ')}. <br> ${testoEsito}`;
+            fraseEsito = `<strong>Sei un po' di tutto! Hai caratteristiche di ${personaggi.join(', ')}.</strong> <br> ${testoEsito}`;
         }
 
         userData.esito = fraseEsito;
@@ -483,11 +483,11 @@ function calcolaEsito() {
         const z = risposte.filter(el => el === 'Z').length;
 
         if (z >= c && z >= m) {
-            userData.esito = "Sei un po' Monica e un po' Carmen. A seconda dei contesti e delle persone che hai attorno, sai essere una persona tanto timida quanto estroversa, tanto cauta quanto ribelle. Decidi quale lato mostrare e a chi.";
+            userData.esito = "<strong>Sei un po' Monica e un po' Carmen.</strong> <br>A seconda dei contesti e delle persone che hai attorno, sai essere una persona tanto timida quanto estroversa, tanto cauta quanto ribelle. Decidi quale lato mostrare e a chi.";
         } else if (c > z && c >= m) {
-            userData.esito = "Sei Carmen <br>Una persona esuberante, fresca e socievole. L'ignoto non ti spaventa. Sei sempre alla ricerca di nuove sfide, nuove avventure, possibilmente lontano da casa e dalla tua comfort zone.";
+            userData.esito = "<strong>Sei Carmen.</strong> <br>Una persona esuberante, fresca e socievole. L'ignoto non ti spaventa. Sei sempre alla ricerca di nuove sfide, nuove avventure, possibilmente lontano da casa e dalla tua comfort zone.";
         } else if (m > z && m >= c) {
-            userData.esito = "Sei Monica <br>Una persona introversa e riflessiva, pronta a difendere a tutti i costi i propri valori e la propria identità. Non ti piace omologarti e trovi nei tuoi pensieri e nelle tue certezze un rifugio sicuro.";
+            userData.esito = "<strong>Sei Monica</strong> <br>Una persona introversa e riflessiva, pronta a difendere a tutti i costi i propri valori e la propria identità. Non ti piace omologarti e trovi nei tuoi pensieri e nelle tue certezze un rifugio sicuro.";
         } else {
             userData.esito = "Errore nel calcolo";
         }

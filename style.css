@@ -1,4 +1,11 @@
-/* Reset e impostazioni base */
+:root {
+    --primary-color: #B198AE;
+    --c-black: #000000;
+    --c-white: #ffffff;
+    --c-white-dark: #c4c4c4;
+    --c-red: #dc3545;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -7,37 +14,54 @@
 }
 
 body {
-    background-color: #000;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--c-black);
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Swiper - Mobile First */
+h1 {
+    font-size: 25px !important;
+}
+
+h2 {
+    padding-bottom: 20px;
+}
+
+strong {
+    font-size: 30px;
+    line-height: 1.3;
+}
+
+br {
+    /* line-height: 100%; */
+    padding: 50px;
+}
+
 .swiper {
     width: 100%;
     height: 100vh;
     height: 100dvh;
-    /* Dynamic viewport height per mobile */
 }
 
 .swiper-slide {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #000;
+    background-color: var(--primary-color);
+
     padding: 35px;
 }
 
 .swiper-button-next,
 .swiper-button-prev {
-    color: #fff;
+    color: var(--c-white);
 }
 
 /* Animazione freccia potenziata */
 .swiper-button-next {
     animation: bounce-pulse 1s ease-in-out infinite;
-    background: #dc3545;
+    background-color: #dc3545;
     width: 50px !important;
     height: 50px !important;
     border-radius: 50%;
@@ -64,7 +88,7 @@ body {
 }
 
 .swiper-pagination-progressbar-fill {
-    background: #dc3545 !important;
+    background-color: #dc3545 !important;
 }
 
 /* Container e layout - Mobile First */
@@ -92,7 +116,7 @@ h1 {
 h2 {
     font-size: 1.4rem;
     margin-bottom: 1rem;
-    color: #fff;
+    color: var(--c-white);
 }
 
 p {
@@ -103,14 +127,14 @@ p {
 
 /* Opzioni disabilitate - aspetto "bloccato" */
 .option:has(input[type="radio"]:disabled) {
-    background: #0a0a0a;
+    background-color: var(--c-white);
     border-color: transparent;
     cursor: default;
     opacity: 0.8;
 }
 
 .option:has(input[type="radio"]:disabled):hover {
-    background: #0a0a0a;
+    background-color: var(--c-white);
     border-color: transparent;
     transform: none;
 }
@@ -122,8 +146,8 @@ p {
 
 /* Opzione selezionata ma disabilitata - più visibile */
 .option:has(input[type="radio"]:disabled:checked) {
-    background: #1a1a1a;
-    border-color: #dc3545;
+    background-color: var(--c-red);
+    border-color: var(--c-white);
     opacity: 1;
     box-shadow: 0 0 15px rgba(220, 53, 69, 0.3);
 }
@@ -133,7 +157,7 @@ p {
 }
 
 .option:has(input[type="radio"]:disabled:checked):hover {
-    background: #1a1a1a;
+    background-color: #1a1a1a;
     border-color: #dc3545;
 }
 
@@ -153,9 +177,9 @@ p {
     padding: 14px;
     font-size: 1rem;
     border-radius: 10px;
-    border: 2px solid #fff;
-    background: #1a1a1a;
-    color: #fff;
+    border: 2px solid var(--c-white-dark);
+    background-color: var(--c-white);
+    color: var(--c-black);
     margin: 20px auto;
     display: block;
     text-align: center;
@@ -165,24 +189,24 @@ p {
 }
 
 #username::placeholder {
-    color: #999;
+    color: #898989;
 }
 
 #username:focus {
     outline: none;
-    border-color: #dc3545;
+    border-color: var(--c-red);
     box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
 }
 
 /* Opzioni radio - Mobile First con click su tutta l'area */
 .option {
-    background: #1a1a1a;
+    background-color: var(--c-white-dark);
     padding: 16px 18px;
     margin: 12px 0;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 2px solid transparent;
+    border: 2px solid var(--c-white);
     display: flex;
     align-items: center;
     text-align: left;
@@ -197,13 +221,13 @@ p {
 }
 
 .option:hover {
-    background: #2a2a2a;
+    background-color: var(--c-red);
     border-color: #fff;
 }
 
 /* Radio selezionato */
 .option:has(input[type="radio"]:checked) {
-    background: #2a2a2a;
+    background-color: var(--c-white);
     border-color: #dc3545;
     box-shadow: 0 0 15px rgba(220, 53, 69, 0.3);
 }
@@ -216,7 +240,6 @@ p {
     flex-shrink: 0;
     accent-color: #dc3545;
     pointer-events: none;
-    /* Il click è gestito dal label */
 }
 
 .option label {
@@ -226,12 +249,11 @@ p {
     flex: 1;
     line-height: 1.4;
     pointer-events: none;
-    /* Il click è gestito dall'option */
 }
 
 /* Bottoni - Mobile First */
 button {
-    background: #dc3545;
+    background-color: #dc3545;
     color: #fff;
     border: none;
     padding: 14px 30px;
@@ -251,17 +273,17 @@ button:active:not(:disabled) {
 }
 
 button:hover:not(:disabled) {
-    background: #c82333;
+    background-color: #c82333;
 }
 
 button:disabled {
-    background: #555;
+    background-color: #555;
     cursor: not-allowed;
     opacity: 0.5;
 }
 
 button.submitted {
-    background: #28a745;
+    background-color: #28a745;
     cursor: default;
 }
 
@@ -271,12 +293,12 @@ button.submitted::after {
 
 /* Stile bottone "Modifica risposta" */
 button.modifica {
-    background: #ffc107;
+    background-color: var(--c-white-dark);
     color: #000;
 }
 
 button.modifica:hover:not(:disabled) {
-    background: #e0a800;
+    background-color: var(--c-white-dark);
 }
 
 button.modifica::after {
@@ -314,10 +336,9 @@ button.modifica::after {
 
 /* Schermata esito con animazione */
 #esito {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     text-align: center;
     padding: 30px 20px;
-    background: #1a1a1a;
     border-radius: 15px;
     margin: 20px auto;
     width: 100%;
