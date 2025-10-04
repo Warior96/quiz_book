@@ -149,6 +149,7 @@ function generaSchermataWelcome() {
             <div class="container">
                 <div class="question-container">
                     <h3>Benvenuto nel quiz</h3>
+                    <h4>Che personaggio de <br>"Il profilo migliore" sei?</h4>
                     <form id="welcomeForm">
                         <input type="text" id="username" placeholder="Inserisci il tuo nome" required>
                         <h1 style="margin-top: 30px;">Hai letto il libro<br>"Il profilo migliore?"</h1>
@@ -536,11 +537,11 @@ async function salvaRisposte() {
 // FUNZIONE: INIZIALIZZA SWIPER
 function initSwiper() {
     swiper = new Swiper(".mySwiper", {
-        cssMode: true,
+        cssMode: false,
         allowTouchMove: false,
         simulateTouch: false,
         touchRatio: 0,
-        touchAngle: 0,
+        touchStartPreventDefault: false,
         pagination: {
             el: ".swiper-pagination",
             type: "progressbar",
@@ -549,6 +550,12 @@ function initSwiper() {
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
         },
+        keyboard: {
+            enabled: false,
+        },
+        mousewheel: {
+            enabled: false,
+        }
     });
 }
 
