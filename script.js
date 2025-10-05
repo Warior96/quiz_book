@@ -115,9 +115,9 @@ const domandeNonLettoLibro = [
 // VARIABILI GLOBALI
 let swiper;
 let domande = [];
-let buttonSubmitted = {}; // Traccia quali bottoni sono stati inviati
+let buttonSubmitted = {};
 
-// FUNZIONE: SHUFFLE ARRAY (Fisher-Yates)
+// ORDINE RANDOMIZZATO RISPOSTE
 function shuffleArray(array) {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
@@ -127,20 +127,20 @@ function shuffleArray(array) {
     return newArray;
 }
 
-// FUNZIONE: VIBRAZIONE MOBILE
+// VIBRAZIONE MOBILE
 function vibrateDevice() {
     if ('vibrate' in navigator) {
-        navigator.vibrate(50); // 50ms di vibrazione
+        navigator.vibrate(250); // ms di vibrazione
     }
 }
 
-// FUNZIONE: INIZIALIZZAZIONE
+// INIZIALIZZAZIONE
 function init() {
     generaSchermataWelcome();
     initSwiper();
 }
 
-// FUNZIONE: GENERA SCHERMATA WELCOME
+// GENERA SCHERMATA WELCOME
 function generaSchermataWelcome() {
     const wrapper = document.getElementById('swiperWrapper');
 
@@ -170,7 +170,6 @@ function generaSchermataWelcome() {
 
     wrapper.innerHTML = slideHTML;
 
-    // Aggiungi click su opzioni
     aggiungiClickOpzioni();
 
     // Event listener per il form
@@ -199,12 +198,12 @@ function generaSchermataWelcome() {
     });
 }
 
-// FUNZIONE: GENERA SLIDES DOMANDE (CON SHUFFLE)
+// GENERA SLIDES DOMANDE
 function generaDomandeSlides() {
     const wrapper = document.getElementById('swiperWrapper');
 
     domande.forEach((domanda, index) => {
-        // Shuffle delle opzioni
+
         const opzioniShuffled = shuffleArray(domanda.opzioni);
 
         const opzioniHTML = opzioniShuffled.map(opzione => `
@@ -235,7 +234,25 @@ function generaDomandeSlides() {
         <div class="swiper-slide">
             <div class="container">
                 <div class="question-container">
-                    <div id="esito">Calcolo del risultato...</div>
+                    <div id="esito-wrapper">
+                        <div id="esito">Calcolo del risultato...</div>
+                    </div>
+                    <div id="eventi-wrapper" class="d-none">
+                        <article class="eventi-dettagli">
+                            <h3>Prossimi appuntamenti</h3>
+                            <div class="evento-item">
+                                <h4 class="luogo">
+                                    <a class="a-luogo" href="https://www.centonovenovantasei.it/" target="_blank">centonove/novantasei</a>
+                                </h4>
+                                <p><strong>📍 Foggia</strong></p>
+                                <time>Venerdì 7 novembre ore 18:30</time>
+                                <p>
+                                    <a class="a-luogo" href="https://www.google.com/maps/search/?api=1&query=Piazza+Camillo+Benso+Cavour,+3,+71121+Foggia" target="_blank">Piazza Camillo Benso Cavour, 3</a>
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                    <button id="btn-eventi" class="btn-eventi">Scopri le prossime presentazioni</button>
                 </div>
             </div>
         </div>
@@ -249,7 +266,7 @@ function generaDomandeSlides() {
     aggiungiEventListeners();
 }
 
-// FUNZIONE: AGGIUNGI CLICK SULLE OPZIONI
+// AGGIUNGI CLICK SULLE OPZIONI
 function aggiungiClickOpzioni() {
     document.addEventListener('click', function (e) {
         const option = e.target.closest('.option');
@@ -259,14 +276,13 @@ function aggiungiClickOpzioni() {
                 radio.checked = true;
                 vibrateDevice();
 
-                // Trigger change event per abilitare il bottone
                 radio.dispatchEvent(new Event('change'));
             }
         }
     });
 }
 
-// FUNZIONE: RIPRISTINA STATO MODIFICA
+// RIPRISTINA STATO MODIFICA
 function ripristinaStatoModifica(domanda) {
     const radioInputs = document.querySelectorAll(`input[name="q${domanda.id}"]`);
     const submitBtn = document.getElementById(`btn-q${domanda.id}`);
@@ -303,7 +319,7 @@ function ripristinaStatoModifica(domanda) {
     }
 }
 
-// FUNZIONE: AGGIUNGI EVENT LISTENERS
+// AGGIUNGI EVENT LISTENERS
 function aggiungiEventListeners() {
     const nextBtn = document.querySelector('.swiper-button-next');
     const prevBtn = document.querySelector('.swiper-button-prev');
@@ -406,7 +422,7 @@ function aggiungiEventListeners() {
     });
 }
 
-// FUNZIONE: CALCOLA ESITO
+// CALCOLA ESITO
 function calcolaEsito() {
     const risposte = Object.values(userData.risposte);
 
@@ -496,9 +512,38 @@ function calcolaEsito() {
 
     // Mostra esito con animazione
     document.getElementById('esito').innerHTML = userData.esito;
+
+    // Mostra il bottone eventi dopo 1 secondo
+    setTimeout(() => {
+        const btnEventi = document.getElementById('btn-eventi');
+        btnEventi.classList.add('visible');
+
+        // Aggiungi event listener al bottone eventi
+        let mostraEventi = false;
+        btnEventi.addEventListener('click', () => {
+            const esitoWrapper = document.getElementById('esito-wrapper');
+            const eventiWrapper = document.getElementById('eventi-wrapper');
+
+            if (!mostraEventi) {
+                // Mostra eventi, nascondi esito
+                esitoWrapper.classList.add('d-none');
+                eventiWrapper.classList.remove('d-none');
+                btnEventi.textContent = 'Torna al risultato';
+                mostraEventi = true;
+            } else {
+                // Mostra esito, nascondi eventi
+                eventiWrapper.classList.add('d-none');
+                esitoWrapper.classList.remove('d-none');
+                btnEventi.textContent = 'Scopri le prossime presentazioni';
+                mostraEventi = false;
+            }
+
+            vibrateDevice();
+        });
+    }, 1000);
 }
 
-// FUNZIONE: SALVA RISPOSTE SU GOOGLE SHEETS
+// SALVA RISPOSTE SU GOOGLE SHEETS
 async function salvaRisposte() {
     // Se l'URL non è configurato, salta il salvataggio
     if (GOOGLE_SCRIPT_URL === 'INSERISCI_QUI_IL_TUO_URL_GOOGLE_SCRIPT') {
@@ -534,7 +579,7 @@ async function salvaRisposte() {
     }
 }
 
-// FUNZIONE: INIZIALIZZA SWIPER
+// INIZIALIZZA SWIPER
 function initSwiper() {
     swiper = new Swiper(".mySwiper", {
         cssMode: false,
