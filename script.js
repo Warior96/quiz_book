@@ -127,15 +127,6 @@ function shuffleArray(array) {
     return newArray;
 }
 
-// VIBRAZIONE MOBILE
-function vibrateDevice() {
-    if (navigator.vibrate) {
-        navigator.vibrate(80);
-    } else if (navigator.webkitVibrate) {
-        navigator.webkitVibrate(80);
-    }
-}
-
 // INIZIALIZZAZIONE
 function init() {
     generaSchermataWelcome();
@@ -147,7 +138,7 @@ function generaSchermataWelcome() {
     const wrapper = document.getElementById('swiperWrapper');
 
     const slideHTML = `
-        <div class="swiper-slide">
+        <article class="swiper-slide">
             <div class="container">
                 <div class="question-container">
                     <h3>Benvenuto nel quiz</h3>
@@ -167,7 +158,7 @@ function generaSchermataWelcome() {
                     </form>
                 </div>
             </div>
-        </div>
+        </article>
     `;
 
     wrapper.innerHTML = slideHTML;
@@ -216,7 +207,7 @@ function generaDomandeSlides() {
         `).join('');
 
         const slideHTML = `
-            <div class="swiper-slide">
+            <article class="swiper-slide">
                 <div class="container">
                     <div class="question-container">
                         <p>Domanda ${domanda.id}</p>
@@ -225,7 +216,7 @@ function generaDomandeSlides() {
                         <button id="btn-q${domanda.id}" disabled>Invia</button>
                     </div>
                 </div>
-            </div>
+            </article>
         `;
 
         wrapper.insertAdjacentHTML('beforeend', slideHTML);
@@ -233,7 +224,7 @@ function generaDomandeSlides() {
 
     // Aggiungi slide esito
     const esitoSlideHTML = `
-        <div class="swiper-slide">
+        <article class="swiper-slide">
             <div class="container">
                 <div class="question-container">
                     <div id="esito-wrapper">
@@ -257,7 +248,7 @@ function generaDomandeSlides() {
                     <button id="btn-eventi" class="btn-eventi">Scopri le prossime presentazioni</button>
                 </div>
             </div>
-        </div>
+        </article>
     `;
     wrapper.insertAdjacentHTML('beforeend', esitoSlideHTML);
 
@@ -276,7 +267,6 @@ function aggiungiClickOpzioni() {
             const radio = option.querySelector('input[type="radio"]');
             if (radio && !radio.disabled) {
                 radio.checked = true;
-                vibrateDevice();
 
                 radio.dispatchEvent(new Event('change'));
             }
@@ -341,8 +331,6 @@ function aggiungiEventListeners() {
                     submitBtn.textContent = 'Invia';
                     submitBtn.classList.remove('submitted', 'modifica');
                 }
-
-                vibrateDevice();
             });
         });
 
@@ -365,7 +353,6 @@ function aggiungiEventListeners() {
                 // Nascondi freccia avanti
                 nextBtn.classList.add('d-none');
 
-                vibrateDevice();
                 return;
             }
 
@@ -392,7 +379,6 @@ function aggiungiEventListeners() {
 
             // Mostra bottone next
             nextBtn.classList.remove('d-none');
-            vibrateDevice();
 
             // Se è l'ultima domanda, calcola esito
             if (domanda.id === domande.length) {
@@ -539,8 +525,6 @@ function calcolaEsito() {
                 btnEventi.textContent = 'Scopri le prossime presentazioni';
                 mostraEventi = false;
             }
-
-            vibrateDevice();
         });
     }, 1000);
 }

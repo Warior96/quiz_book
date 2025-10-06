@@ -50,16 +50,8 @@ strong {
     line-height: 1.3;
 }
 
-br {
-    padding: 50px;
-}
-
 .d-none {
     display: none !important;
-}
-
-.text-center {
-    text-align: center;
 }
 
 .container {
@@ -140,7 +132,7 @@ br {
 }
 
 .option:has(input[type="radio"]:disabled:checked) label {
-    color: #fff;
+    color: var(--c-white);
 }
 
 /* Opzioni disabilitate */
@@ -152,7 +144,7 @@ br {
 }
 
 .option:has(input[type="radio"]:disabled) label {
-    color: #666;
+    color: var(--c-white-dark);
     cursor: default;
 }
 
@@ -226,7 +218,7 @@ br {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    accent-color: #dc3545;
+    accent-color: var(--c-red);
     pointer-events: none;
 }
 
@@ -241,7 +233,7 @@ br {
 
 /* Bottoni */
 button {
-    background-color: #dc3545;
+    background-color: var(--c-red);
     color: #fff;
     border: none;
     padding: 14px 30px;
@@ -277,7 +269,7 @@ button.submitted::after {
 
 button.modifica {
     background-color: var(--c-white-dark);
-    color: #000;
+    color: var(--c-black);
 }
 
 button.modifica::after {
