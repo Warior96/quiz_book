@@ -129,8 +129,10 @@ function shuffleArray(array) {
 
 // VIBRAZIONE MOBILE
 function vibrateDevice() {
-    if ('vibrate' in navigator) {
-        navigator.vibrate(250); // ms di vibrazione
+    if (navigator.vibrate) {
+        navigator.vibrate(80);
+    } else if (navigator.webkitVibrate) {
+        navigator.webkitVibrate(80);
     }
 }
 
