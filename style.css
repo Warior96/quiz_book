@@ -338,22 +338,23 @@ button.modifica::after {
 .eventi-dettagli {
     background-color: var(--c-white);
     border-radius: 15px;
-    padding: 25px;
+    padding: 20px 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     animation: fadeInScale 0.6s ease forwards;
+    max-height: 85vh;
+    overflow-y: auto;
 }
 
 .eventi-dettagli h3 {
     color: var(--c-red);
     font-size: 1.4rem;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     border-bottom: 2px solid var(--c-red);
 }
 
 .evento-item {
     text-align: left;
-    padding: 15px;
+    padding: 15px 4px;
     background-color: #f9f9f9;
     border-radius: 10px;
     margin-bottom: 15px;
@@ -370,19 +371,23 @@ button.modifica::after {
 }
 
 .evento-item strong {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--c-red);
 }
 
 .luogo {
-    padding-bottom: 10px;
-    font-size: 18px;
+    padding-top: 12px;
+    font-size: 19px;
 }
 
 .a-luogo {
     color: var(--primary-color-dark) !important;
 }
 
+.p-luogo {
+    padding-bottom: 10px;
+    border-bottom: 1px dotted var(--primary-color);
+}
 
 
 /* Media queries */

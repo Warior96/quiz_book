@@ -231,19 +231,48 @@ function generaDomandeSlides() {
                         <div id="esito">Calcolo del risultato...</div>
                     </div>
                     <div id="eventi-wrapper" class="d-none">
-                        <article class="eventi-dettagli">
+                        <div class="eventi-dettagli">
                             <h3>Prossimi appuntamenti</h3>
-                            <div class="evento-item">
+                            <article class="evento-item">
+
                                 <h4 class="luogo">
-                                    <a class="a-luogo" href="https://www.centonovenovantasei.it/" target="_blank">centonove/novantasei</a>
+                                    <a class="a-luogo" href="https://www.centonovenovantasei.it/" target="_blank">🏢 Centonove/Novantasei</a>
                                 </h4>
                                 <p><strong>📍 Foggia</strong></p>
                                 <time>Venerdì 7 novembre ore 18:30</time>
-                                <p>
+                                <p class="p-luogo">
                                     <a class="a-luogo" href="https://www.google.com/maps/search/?api=1&query=Piazza+Camillo+Benso+Cavour,+3,+71121+Foggia" target="_blank">Piazza Camillo Benso Cavour, 3</a>
                                 </p>
-                            </div>
-                        </article>
+
+                                <h4 class="luogo">
+                                    <a class="a-luogo" href="https://www.portineria21.it/" target="_blank">🏢 Portineria 21</a>
+                                </h4>
+                                <p><strong>📍 Bari</strong></p>
+                                <time>Giovedì 13 novembre ore 17:30</time>
+                                <p class="p-luogo">
+                                    <a class="a-luogo" href="https://maps.app.goo.gl/S1ZrobnxJ1YgHqtV7" target="_blank">Via Benedetto Cairoli, 137/a/139</a>
+                                </p>
+
+                                <h4 class="luogo">
+                                    <a class="a-luogo" href="https://www.instagram.com/croceviadeimondi/" target="_blank">🏢 Crocevia dei Mondi</a>
+                                </h4>
+                                <p><strong>📍 Barletta</strong></p>
+                                <time>Venerdì 14 novembre ore 19:00</time>
+                                <p class="p-luogo">
+                                    <a class="a-luogo" href="https://maps.app.goo.gl/xfesNVmbwsyagzuUA" target="_blank">Via Vittorio Alfieri, 9</a>
+                                </p>
+
+                                <h4 class="luogo">
+                                    <a class="a-luogo" href="http://www.libreriadelteatro.it/index.asp" target="_blank">🏢 La libreria del teatro</a>
+                                </h4>
+                                <p><strong>📍 Bitonto</strong></p>
+                                <time>Sabato 7 febbraio</time>
+                                <p class="p-luogo">
+                                    <a class="a-luogo" href="Largo Teatro Umberto I, 7" target="_blank">Largo Teatro Umberto I, 7</a>
+                                </p>
+
+                            </article>
+                        </div>
                     </div>
                     <button id="btn-eventi" class="btn-eventi">Scopri le prossime presentazioni</button>
                 </div>
