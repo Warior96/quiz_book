@@ -263,12 +263,12 @@ function generaDomandeSlides() {
                                 </p>
 
                                 <h4 class="luogo">
-                                    <a class="a-luogo" href="http://www.libreriadelteatro.it/index.asp" target="_blank">🏢 La libreria del teatro</a>
+                                    <a class="a-luogo" href="https://www.facebook.com/share/17f4uAc21M/" target="_blank">🏢 La libreria del teatro</a>
                                 </h4>
                                 <p><strong>📍 Bitonto</strong></p>
                                 <time>Sabato 7 febbraio</time>
                                 <p class="p-luogo">
-                                    <a class="a-luogo" href="Largo Teatro Umberto I, 7" target="_blank">Largo Teatro Umberto I, 7</a>
+                                    <a class="a-luogo" href="https://maps.app.goo.gl/YMdYP3uK6N7qcZZP6" target="_blank">Largo Teatro Umberto I, 7</a>
                                 </p>
 
                             </article>

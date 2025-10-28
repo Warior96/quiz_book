@@ -278,9 +278,9 @@ button.modifica::after {
 
 /* Esito */
 #esito {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     text-align: center;
-    padding: 30px 20px;
+    padding: 10px 0px;
     border-radius: 15px;
     margin: 20px auto;
     width: 100%;
