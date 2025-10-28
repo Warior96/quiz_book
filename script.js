@@ -263,7 +263,7 @@ function generaDomandeSlides() {
                                 </p>
 
                                 <h4 class="luogo">
-                                    <a class="a-luogo" href="https://www.facebook.com/share/17f4uAc21M/" target="_blank">🏢 La libreria del teatro</a>
+                                    <a class="a-luogo" href="https://www.facebook.com/share/17f4uAc21M/" target="_blank">🏢 Libreria del teatro</a>
                                 </h4>
                                 <p><strong>📍 Bitonto</strong></p>
                                 <time>Sabato 7 febbraio</time>
